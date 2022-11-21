@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hollowapp
+  labels:
+    app: hollowapp
+
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: hollowapp
+  strategy:
+    type: Recreate
+  
+  template:
+    metadata:
+      labels:
+        app: hollowapp
+    spec:
+      containers:
+      - name: hollowapp
+        image: eshanks16/k8s-hollowapp:v2
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5000
+        env:
+        - name: SECRET_KEY
+          valueFrom:
+            configMapKeyRef:
+              name: hollowdb-configmap
+              key: db.string
